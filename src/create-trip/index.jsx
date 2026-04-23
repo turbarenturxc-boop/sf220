@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input"
 import { AI_PROMPT, SelectBudgetOptions, SelectTravelsList } from '@/constants/options';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
+import { chatSession } from '@/service/AIModel';
 
 
 function CreateTrip() {
@@ -23,7 +24,7 @@ function CreateTrip() {
         console.log(formData);
     }, [formData])
 
-    const OnGenerateTrip = () => {
+    const OnGenerateTrip = async () => {
         if (formData?.noOfDays > 8 && !formData?.location || !formData?.budget || !formData?.traveler) {
             toast("Please fill all the fields")
             return;
@@ -37,6 +38,10 @@ function CreateTrip() {
             .replace('{totalDays}', formData?.noOfDays)
 
         console.log(FINAL_PROMPT);
+
+        const result = await chatSession.sendMessage(FINAL_PROMPT);
+
+        console.log(result?.response?.text());
     }
 
 
@@ -44,6 +49,7 @@ function CreateTrip() {
         <div className="sm:px-10 md:px-32 lg:px-56 xl:px-72 px-5 mt-10">
             <h2 className="font-bold text-3xl">Tell us your travel preferences</h2>
             <p className='mt-3 text-gray-500 text-lg'>Write more here!</p>
+
 
             <div className='mt-20 flex flex-col gap-10'>
                 <div>
